@@ -2,5 +2,91 @@
 title: "Fouragers"
 format: html
 editor: visual
+editor_options: 
+  chunk_output_type: console
 ---
+```{r}
+library(tidyverse)
+library(janitor)
+library(lubridate)
+
+```
+
+
+```{r}
+# read in the 4 datasets 
+
+bisley_q1_raw <- read_csv(file.path("/courses/EDS214/group_project/2024/fouragers/data", "QuebradaCuenca1-Bisley.csv"))
+
+bisley_q2_raw <- read_csv(file.path("/courses/EDS214/group_project/2024/fouragers/data", "QuebradaCuenca2-Bisley.csv"))
+
+bisley_q3_raw <- read_csv(file.path("/courses/EDS214/group_project/2024/fouragers/data", "QuebradaCuenca3-Bisley.csv"))
+
+prm_raw <- read_csv(file.path("/courses/EDS214/group_project/2024/fouragers/data", "RioMameyesPuenteRoto.csv"))
+```
+
+
+```{r}
+# cleaning data 
+bisley_q1_clean <- bisley_q1_raw %>% 
+  clean_names() %>% 
+  mutate(year = lubridate::year(sample_date)) %>% 
+  filter(year %in% (1988:1995)) %>%
+  select(sample_date, sample_id, year, no3_n, k)
+
+bisley_q2_clean <- bisley_q2_raw %>% 
+  clean_names() %>% 
+  mutate(year = lubridate::year(sample_date)) %>% 
+  filter(year %in% (1988:1995)) %>%
+  select(sample_date, sample_id, year, no3_n, k)
+
+bisley_q3_clean <- bisley_q3_raw %>% 
+  clean_names() %>% 
+  mutate(year = lubridate::year(sample_date)) %>% 
+  filter(year %in% (1988:1995)) %>%
+  select(sample_date, sample_id, year, no3_n, k)
+
+prm_clean <- prm_raw %>% 
+  clean_names() %>% 
+  mutate(year = lubridate::year(sample_date)) %>% 
+  filter(year %in% (1988:1995)) %>%
+  select(sample_date, sample_id, year, no3_n, k)
+  
+```
+
+```{r}
+# doing a join of all 4 data sets 
+stream_chem <- bisley_q1_clean %>% 
+  full_join(bisley_q2_clean) %>% 
+  full_join(bisley_q3_clean) %>% 
+  full_join(prm_clean)
+```
+
+
+```{r}
+# creating a basic plot 
+ggplot(data = stream_chem, aes(x = sample_date, y = k, color = sample_id)) +
+  geom_line() +
+  scale_y_continuous(limits = c(0.3, 1.7))
+
+# Currently plot lines are super jittery
+# Could it be grouped by month? 
+```
+
+```{r}
+# lets do a test to group_by month 
+bisley_q1_test <- bisley_q1_clean %>% 
+  mutate(month = lubridate::month(sample_date)) %>% 
+  group_by(sample_date) %>% 
+  summarise(month_mean_k = mean(k),
+            sample_id)
+
+# quick plot 
+ggplot(data = bisley_q1_test, aes(x = sample_date, y = month_mean_k)) +
+  geom_line() +
+  scale_y_continuous(limits = c(0.3, 1.7))
+
+# does make it look slightly smoother, however it still is much more jumpy than the o.g plot. 
+```
+
 
