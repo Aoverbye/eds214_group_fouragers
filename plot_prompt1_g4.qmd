@@ -61,6 +61,33 @@ stream_chem <- bisley_q1_clean %>%
   full_join(prm_clean)
 ```
 
+```{r}
+# filter k from 1988-10-04 to 1992-03-03
+
+k_plot_data <- stream_chem |>
+  filter(sample_date >= "1988-10-04" & sample_date <= "1992-03-03")
+
+```
+
+```{r}
+# Potassium plot new
+ggplot(data = k_plot_data, aes(x = sample_date, y = k, color = sample_id)) +
+  geom_line() +
+  labs(x = "Years", y = "K (mg / liter)") +
+  scale_y_continuous(limits = c(0.3, 1.7), 
+                     breaks = (c(0.4, 0.7, 1.0, 1.3, 1.6)), 
+                     minor_breaks = (c(0.3, 1.7, by = 0.1))) +
+  scale_x_date(limits = as.Date(c("1988-01-05", "1994-06-07")),
+               date_breaks = "1 year",
+               date_labels = "%Y") +
+  geom_vline(xintercept = as.numeric(stream_chem$sample_date[119]), linetype = "dashed", color = "black") +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.ticks = element_line(),
+        panel.border = element_rect(colour = "black", fill=NA, size=1))
+
+```
 
 ```{r}
 # Potassium plot
