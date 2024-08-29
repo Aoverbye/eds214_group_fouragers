@@ -70,10 +70,18 @@ k_plot_data <- stream_chem |>
 ```
 
 ```{r}
+# filter NO3 from 1988-10-04 to 1994-06-07
+
+no3_plot_data <- stream_chem |>
+  filter(sample_date >= "1988-10-04" & sample_date <= "1994-06-07")
+```
+
+
+```{r}
 # Potassium plot new
 ggplot(data = k_plot_data, aes(x = sample_date, y = k, color = sample_id)) +
   geom_line() +
-  labs(x = "Years", y = "K (mg / liter)") +
+  labs(x = "Years", y = "K (mg / liter)", color = "Stream Sample ID") +
   scale_y_continuous(limits = c(0.3, 1.7), 
                      breaks = (c(0.4, 0.7, 1.0, 1.3, 1.6)), 
                      minor_breaks = (c(0.3, 1.7, by = 0.1))) +
@@ -81,51 +89,44 @@ ggplot(data = k_plot_data, aes(x = sample_date, y = k, color = sample_id)) +
                date_breaks = "1 year",
                date_labels = "%Y") +
   geom_vline(xintercept = as.numeric(stream_chem$sample_date[119]), linetype = "dashed", color = "black") +
+  scale_color_manual(values = c("red", "blue", "yellow", "green"),
+                     labels = c("PRM", "BQ1", "BQ2", "BQ3")) +
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         panel.background = element_blank(),
         axis.ticks = element_line(),
-        panel.border = element_rect(colour = "black", fill=NA, size=1))
+        panel.border = element_rect(colour = "black", fill=NA, size=1),
+        legend.background = element_blank(),
+        legend.position = c(0.85, 0.8))
 
 ```
 
-```{r}
-# Potassium plot
-ggplot(data = stream_chem, aes(x = sample_date, y = k, color = sample_id)) +
-  geom_line() +
-  labs(x = "Years", y = "K (mg / liter)") +
-  scale_y_continuous(limits = c(0.3, 1.7), 
-                     breaks = (c(0.4, 0.7, 1.0, 1.3, 1.6)), 
-                     minor_breaks = (c(0.3, 1.7, by = 0.1))) +
-  geom_vline(xintercept = as.numeric(stream_chem$sample_date[119]), linetype = "dashed", color = "black") +
-  theme(panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.background = element_blank(),
-        axis.ticks = element_line(),
-        panel.border = element_rect(colour = "black", fill=NA, size=1))
-
-  
-```
 
 ```{r}
 # Nitrate plot
-ggplot(data = stream_chem, aes(x = sample_date, y = no3_n, color = sample_id)) +
-  geom_line() +
-  scale_y_continuous(limits = c(5, 500))
+ggplot(data = no3_plot_data, aes(x = sample_date, y = no3_n, color = sample_id)) +
+  geom_line(show.legend = FALSE) +
+  labs(x = "Years", y = "NO3 (micrograms / liter)") +
+  scale_y_continuous(limits = c(5, 500), 
+                     breaks = (c(5, 100, 300, 500))) +
+  scale_x_date(limits = as.Date(c("1988-01-05", "1994-06-07")),
+               date_breaks = "1 year",
+               date_labels = "%Y") +
+  geom_vline(xintercept = as.numeric(stream_chem$sample_date[119]), linetype = "dashed", color = "black") +
+  scale_color_manual(values = c("red", "blue", "yellow", "green"),
+                     labels = c("PRM", "BQ1", "BQ2", "BQ3")) +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.ticks = element_line(),
+        panel.border = element_rect(colour = "black", fill=NA, size=1))
+
+# figure out how to get rid of legend
 ```
 
 ```{r}
-# lets do a test to group_by month 
-# bisley_q1_test <- bisley_q1_clean %>% 
-  # mutate(month = lubridate::month(sample_date)) %>% 
-  # group_by(sample_date) %>% 
-  # summarise(month_mean_k = mean(k),
-            # sample_id)
 
-# quick plot 
-# ggplot(data = bisley_q1_test, aes(x = sample_date, y = month_mean_k)) +
-  # geom_line() +
-  # scale_y_continuous(limits = c(0.3, 1.7))
 
-# does make it look slightly smoother, however it still is much more jumpy than the o.g plot. 
+
 ```
+
