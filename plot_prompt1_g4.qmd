@@ -5,14 +5,13 @@ editor: visual
 editor_options: 
   chunk_output_type: console
 ---
+
 ```{r}
 library(tidyverse)
 library(janitor)
 library(lubridate)
 
 ```
-
-
 
 ```{r}
 # read in the 4 datasets 
@@ -25,7 +24,6 @@ bisley_q3_raw <- read_csv(file.path("/courses/EDS214/group_project/2024/fourager
 
 prm_raw <- read_csv(file.path("/courses/EDS214/group_project/2024/fouragers/data", "RioMameyesPuenteRoto.csv"))
 ```
-
 
 ```{r}
 # cleaning data 
@@ -65,29 +63,42 @@ stream_chem <- bisley_q1_clean %>%
 
 
 ```{r}
-# creating a basic plot 
+# Potassium plot
 ggplot(data = stream_chem, aes(x = sample_date, y = k, color = sample_id)) +
   geom_line() +
-  scale_y_continuous(limits = c(0.3, 1.7))
+  labs(x = "Years", y = "K (mg / liter)") +
+  scale_y_continuous(limits = c(0.3, 1.7), 
+                     breaks = (c(0.4, 0.7, 1.0, 1.3, 1.6)), 
+                     minor_breaks = (c(0.3, 1.7, by = 0.1))) +
+  geom_vline(xintercept = as.numeric(stream_chem$sample_date[119]), linetype = "dashed", color = "black") +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.ticks = element_line(),
+        panel.border = element_rect(colour = "black", fill=NA, size=1))
 
-# Currently plot lines are super jittery
-# Could it be grouped by month? 
+  
+```
+
+```{r}
+# Nitrate plot
+ggplot(data = stream_chem, aes(x = sample_date, y = no3_n, color = sample_id)) +
+  geom_line() +
+  scale_y_continuous(limits = c(5, 500))
 ```
 
 ```{r}
 # lets do a test to group_by month 
-bisley_q1_test <- bisley_q1_clean %>% 
-  mutate(month = lubridate::month(sample_date)) %>% 
-  group_by(sample_date) %>% 
-  summarise(month_mean_k = mean(k),
-            sample_id)
+# bisley_q1_test <- bisley_q1_clean %>% 
+  # mutate(month = lubridate::month(sample_date)) %>% 
+  # group_by(sample_date) %>% 
+  # summarise(month_mean_k = mean(k),
+            # sample_id)
 
 # quick plot 
-ggplot(data = bisley_q1_test, aes(x = sample_date, y = month_mean_k)) +
-  geom_line() +
-  scale_y_continuous(limits = c(0.3, 1.7))
+# ggplot(data = bisley_q1_test, aes(x = sample_date, y = month_mean_k)) +
+  # geom_line() +
+  # scale_y_continuous(limits = c(0.3, 1.7))
 
 # does make it look slightly smoother, however it still is much more jumpy than the o.g plot. 
 ```
-
-
