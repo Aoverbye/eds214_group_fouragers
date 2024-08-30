@@ -10,8 +10,10 @@ editor_options:
 library(tidyverse)
 library(janitor)
 library(lubridate)
-
+library(patchwork)
 ```
+
+Read in stream chemistry data
 
 ```{r}
 # read in the 4 datasets 
@@ -25,15 +27,17 @@ bisley_q3_raw <- read_csv(file.path("/courses/EDS214/group_project/2024/fourager
 prm_raw <- read_csv(file.path("/courses/EDS214/group_project/2024/fouragers/data", "RioMameyesPuenteRoto.csv"))
 ```
 
+Clean data
+
 ```{r}
 # cleaning data 
 bisley_q1_clean <- bisley_q1_raw %>% 
-  clean_names() %>% 
-  mutate(year = lubridate::year(sample_date)) %>% 
-  filter(year %in% (1988:1995)) %>%
-  select(sample_date, sample_id, year, no3_n, k)
+  clean_names() %>%    # convert column names to lower snake case
+  mutate(year = lubridate::year(sample_date)) %>%    # create a new column for year
+  filter(year %in% (1988:1995)) %>%   # only include observations from 1988 - 1995
+  select(sample_date, sample_id, year, no3_n, k)   # only include useful columns
 
-bisley_q2_clean <- bisley_q2_raw %>% 
+bisley_q2_clean <- bisley_q2_raw %>%   # do the same flow for each data set
   clean_names() %>% 
   mutate(year = lubridate::year(sample_date)) %>% 
   filter(year %in% (1988:1995)) %>%
@@ -53,8 +57,10 @@ prm_clean <- prm_raw %>%
   
 ```
 
+Join data into one table
+
 ```{r}
-# doing a join of all 4 data sets 
+# doing a join of all 4 cleaned data sets 
 stream_chem <- bisley_q1_clean %>% 
   full_join(bisley_q2_clean) %>% 
   full_join(bisley_q3_clean) %>% 
@@ -62,24 +68,21 @@ stream_chem <- bisley_q1_clean %>%
 ```
 
 ```{r}
-# filter k from 1988-10-04 to 1992-03-03
-
+# filter k from 1988-10-04 to 1992-03-03 for plotting
 k_plot_data <- stream_chem |>
   filter(sample_date >= "1988-10-04" & sample_date <= "1992-03-03")
 
 ```
 
 ```{r}
-# filter NO3 from 1988-10-04 to 1994-06-07
-
+# filter NO3 from 1988-10-04 to 1994-06-07 for plotting
 no3_plot_data <- stream_chem |>
   filter(sample_date >= "1988-10-04" & sample_date <= "1994-06-07")
 ```
 
-
 ```{r}
-# Potassium plot new
-ggplot(data = k_plot_data, aes(x = sample_date, y = k, color = sample_id)) +
+# Potassium plot
+k_plot <- ggplot(data = k_plot_data, aes(x = sample_date, y = k, color = sample_id)) +
   geom_line() +
   labs(x = "Years", y = "K (mg / liter)", color = "Stream Sample ID") +
   scale_y_continuous(limits = c(0.3, 1.7), 
@@ -89,7 +92,7 @@ ggplot(data = k_plot_data, aes(x = sample_date, y = k, color = sample_id)) +
                date_breaks = "1 year",
                date_labels = "%Y") +
   geom_vline(xintercept = as.numeric(stream_chem$sample_date[119]), linetype = "dashed", color = "black") +
-  scale_color_manual(values = c("red", "blue", "yellow", "green"),
+  scale_color_manual(values = c("#22333b", "blue", "#fad643", "#1c7c54"),
                      labels = c("PRM", "BQ1", "BQ2", "BQ3")) +
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
@@ -97,14 +100,14 @@ ggplot(data = k_plot_data, aes(x = sample_date, y = k, color = sample_id)) +
         axis.ticks = element_line(),
         panel.border = element_rect(colour = "black", fill=NA, size=1),
         legend.background = element_blank(),
-        legend.position = c(0.85, 0.8))
+        legend.position = c(0.85, 0.8),
+        axis.title.x = element_blank())
 
 ```
 
-
 ```{r}
 # Nitrate plot
-ggplot(data = no3_plot_data, aes(x = sample_date, y = no3_n, color = sample_id)) +
+no3_plot <- ggplot(data = no3_plot_data, aes(x = sample_date, y = no3_n, color = sample_id)) +
   geom_line(show.legend = FALSE) +
   labs(x = "Years", y = "NO3 (micrograms / liter)") +
   scale_y_continuous(limits = c(5, 500), 
@@ -113,20 +116,20 @@ ggplot(data = no3_plot_data, aes(x = sample_date, y = no3_n, color = sample_id))
                date_breaks = "1 year",
                date_labels = "%Y") +
   geom_vline(xintercept = as.numeric(stream_chem$sample_date[119]), linetype = "dashed", color = "black") +
-  scale_color_manual(values = c("red", "blue", "yellow", "green"),
+  scale_color_manual(values = c("#22333b", "blue", "#fad643", "#1c7c54"),
                      labels = c("PRM", "BQ1", "BQ2", "BQ3")) +
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         panel.background = element_blank(),
-        axis.ticks = element_line(),
+        #axis.ticks = element_line(),
         panel.border = element_rect(colour = "black", fill=NA, size=1))
 
-# figure out how to get rid of legend
 ```
+
+Patch plots together
 
 ```{r}
 
-
+k_plot / no3_plot
 
 ```
-
