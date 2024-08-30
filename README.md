@@ -5,7 +5,7 @@ The purpose of this data project is to practice creating and following an analyt
 
 ## Description
 
-The first part aims to recreate a plot of stream chemistry variables using data from the Luquillo LTER. In the second part, we created our own research question [INSERT QUESTION]
+The first part aims to recreate a plot of stream chemistry variables using data from the Luquillo LTER. In the second part, we created our own research question to explore if sodium concentrations differed across the four sample sites and their respective altitudes. Additionally, we wanted to see if this concentration was at all impacted by Hurricane Hugo. 
 
 
 ## Getting Started
@@ -31,38 +31,25 @@ McDowell, W. and International Institute of Tropical Forestry(IITF), USDA Forest
 Copy Citation
 
 
-### Executing program
-
-* How to run the program
-* Step-by-step bullets
-```
-code blocks for commands
-```
-
-## Help
-
-Any advise for common problems or issues.
-```
-command to run if program contains helper info
-```
-
 ## Authors
 
-Contributors names and contact info
+Amanda Overbye 
+[Aoverbye](https://github.com/Aoverbye)
 
-ex. Dominique Pizzie  
-ex. [@DomPizzie](https://twitter.com/dompizzie)
+Marina Kochuten
+[marinakochuten](https://github.com/marinakochuten)
 
-## Version History
+Eva Newby 
+[evajnewby](https://github.com/evajnewby)
 
-* 0.2
-    * Various bug fixes and optimizations
-    * See [commit change]() or See [release history]()
-* 0.1
-    * Initial Release
+Jordan Sibley 
+[jordancsibley](https://github.com/jordancsibley)
 
-## License
 
-This project is licensed under the [NAME HERE] License - see the LICENSE.md file for details
+## Computing Environment 
+The session info can be found [here](https://github.com/Aoverbye/eds214_group_fouragers/blob/main/session_info)
+
 
 ## Acknowledgments
+
+We would like to thank our EDS 214 instructor, Julien Brun, and our T.A., Brian Lee, for their continued helped during this project. Additionally, we want to thank the researchers at the Luquillo LTER for collecting this data. 
