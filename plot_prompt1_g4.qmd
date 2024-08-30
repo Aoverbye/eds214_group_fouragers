@@ -5,14 +5,13 @@ editor: visual
 editor_options: 
   chunk_output_type: console
 ---
+
 ```{r}
 library(tidyverse)
 library(janitor)
 library(lubridate)
 
 ```
-
-
 
 ```{r}
 # read in the 4 datasets 
@@ -25,7 +24,6 @@ bisley_q3_raw <- read_csv(file.path("/courses/EDS214/group_project/2024/fourager
 
 prm_raw <- read_csv(file.path("/courses/EDS214/group_project/2024/fouragers/data", "RioMameyesPuenteRoto.csv"))
 ```
-
 
 ```{r}
 # cleaning data 
@@ -63,7 +61,6 @@ stream_chem <- bisley_q1_clean %>%
   full_join(prm_clean)
 ```
 
-
 ```{r}
 # creating a basic plot 
 ggplot(data = stream_chem, aes(x = sample_date, y = k, color = sample_id)) +
@@ -89,5 +86,3 @@ ggplot(data = bisley_q1_test, aes(x = sample_date, y = month_mean_k)) +
 
 # does make it look slightly smoother, however it still is much more jumpy than the o.g plot. 
 ```
-
-
