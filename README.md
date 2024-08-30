@@ -47,9 +47,9 @@ Jordan Sibley
 
 
 ## Computing Environment 
-The session info can be found [here]()
+The session info can be found [here](https://github.com/Aoverbye/eds214_group_fouragers/blob/main/session_info)
 
 
 ## Acknowledgments
 
-We would like to thank our EDS 214 instructor, Julien Brun, and our T.A, Brian Lee, for their continued helped during this project. Additionally, we want to thank the researchers at the Luquillo LTER for collecting this data. 
+We would like to thank our EDS 214 instructor, Julien Brun, and our T.A., Brian Lee, for their continued helped during this project. Additionally, we want to thank the researchers at the Luquillo LTER for collecting this data. 
